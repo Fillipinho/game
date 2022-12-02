@@ -1,0 +1,133 @@
+import random
+from time import sleep
+
+print("Welcome to Zombie Dice!")
+
+numJogadores = 0
+
+while (numJogadores < 2):
+
+    numJogadores = int(input("Quantidade de jogadores?: "))
+    print("N PLAYERS {}".format (numJogadores))
+
+    if (numJogadores < 2):
+        print("2 jogadores necessários!")
+
+listaJogadores = []
+
+for i in range (0, numJogadores):
+
+    nome = input(f'Digite o nome do {i + 1}º jogador: ').upper()
+    listaJogadores.append(nome)
+
+def dadoVerde():
+    dadoVerde = ("C", "P", "C", "T", "P", "C")
+    return dadoVerde
+
+def dadoAmarelo():
+    dadoAmarelo = ("T", "P", "C", "T", "P", "C")
+    return dadoAmarelo
+
+def dadoVermelho():
+    dadoVermelho = ("T", "P", "T", "C", "P", "T")
+    return dadoVermelho
+
+listaDados = [
+    dadoVerde(), dadoVerde(), dadoVerde(), dadoVerde(), dadoVerde(), dadoVerde(),
+    dadoAmarelo(), dadoAmarelo(),dadoAmarelo(), dadoAmarelo(),
+    dadoVermelho(), dadoVermelho(), dadoVermelho()
+]
+
+print("Iniciando o jogo!")
+
+jogadorAtual = 0
+dadosSorteados = []
+tiros = 0
+cerebros = 0
+passos = 0
+pontos = []
+
+
+for i in range(0, numJogadores):
+    pontos.append(0)
+
+def sorteamentoDados (cor_dado = ()):
+    for n in range (0, 3):
+        numSorteado = random.randrange(13)
+        dadoSorteado = listaDados[numSorteado]
+        if dadoSorteado == dadoVerde():
+            cor_dado = "VERDE"
+        elif dadoSorteado == dadoAmarelo():
+            cor_dado = "AMARELO"
+        elif dadoSorteado == dadoVermelho():
+            cor_dado = "VERMELHO"
+
+        print("O dado sorteado foi", cor_dado)
+        dadosSorteados.append(dadoSorteado)
+        sleep(1)
+
+while True:
+
+    print('Turno do jogador: ', listaJogadores[jogadorAtual])
+
+    sorteamentoDados()
+
+    for dadoSorteado in dadosSorteados:
+        num_faces = random.randint(0, 5)
+        if dadoSorteado[num_faces] == "C":
+            print('Você comeu um CÉREBRO!')
+            cerebros += 1
+
+        elif dadoSorteado[num_faces] == "T":
+            print('Você levou um TIRO!')
+            tiros += 1
+
+        else:
+            print('Você tirou um PASSO! Sua vítima escapou!')
+            passos += 1
+    sleep(1)
+
+    print("===SCORE ATUAL===")
+    print("CÉREBROS: ", cerebros)
+    print("TIROS: ", tiros)
+
+    if tiros > 2:
+        print('Você perdeu essa rodada! Levou, ', tiros, ' tiros')
+        tiros = 0
+        cerebros = 0
+        passos = 0
+        dados_sorteados = []
+        jogadorAtual += 1
+
+        if jogadorAtual == len(listaJogadores):
+            jogadorAtual = 0
+            print('Indo para a próxima rodada, jogador: ', listaJogadores[jogadorAtual])
+
+    else:
+        continuar_turno = str(input('Você deseja continuar? [S/N] ')).strip().upper()[0]
+
+        if (continuar_turno == "N"):
+            pontos[jogadorAtual] += cerebros
+            jogadorAtual += 1
+            dadosSorteados = []
+            tiros = 0
+            cerebros = 0
+            passos = 0
+
+            if (jogadorAtual == len(listaJogadores)):
+                jogadorAtual = 0
+
+    if pontos [jogadorAtual] >= 13:
+        print('Parabéns', listaJogadores[jogadorAtual], 'você VENCEU!!!')
+        print("Finalizando o protótipo do jogo")
+        break
+
+    dadosSorteados.clear()
+
+    for i in range (0, numJogadores):
+        print(listaJogadores[i], pontos[i], 'pontos', end='')
+    print()
+
+print("VOCE É O VENCEDOR !")
+#Fillipe S. R. BATISTA 
+#ADS RC 2P
